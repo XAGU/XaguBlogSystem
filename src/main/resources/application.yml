@@ -8,3 +8,27 @@ spring:
     username: root
     password: 123456
     driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    show-sql: true
+  mail:
+    host: smtp.qq.com
+    username: 2422494482@qq.com
+    password: pluiweodqlbvdjee
+    protocol: smtp
+    default-encoding: UTF-8
+  redis:
+    host: 192.168.189.140
+    port: 6379
+    password:
+  task:
+    scheduling:
+      thread-name-prefix: xagu_blog_task_worker-
+    execution:
+      pool:
+        queue-capacity: 30
+        max-size: 10
+        core-size: 2
+logging:
+  level:
+    root: info
+    com.xagu.blog: debug

@@ -14,7 +14,11 @@ public enum ResponseState {
     /**
      * 登录成功
      */
-    LOGIN_SUCCESS(true, 20000, "登录成功"),
+    LOGIN_SUCCESS(true, 20001, "登录成功"),
+    /**
+     * 注册成功
+     */
+    REGISTER_SUCCESS(true, 20001, "注册成功"),
     /**
      * 失败
      */

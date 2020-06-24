@@ -1,6 +1,6 @@
 package com.xagu.blog.controller.admin;
 
-import com.xagu.blog.pojo.Images;
+import com.xagu.blog.pojo.Image;
 import com.xagu.blog.response.ResponseResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,7 +34,7 @@ public class ImageApi {
      * 修改图片
      */
     @PutMapping("{imageId}")
-    public ResponseResult updateImage(@PathVariable("imageId") String imageId, @RequestBody Images images) {
+    public ResponseResult updateImage(@PathVariable("imageId") String imageId, @RequestBody Image image) {
         return null;
     }
 

@@ -6,6 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.util.Date;
 
 /**
  * @author xagu
@@ -36,7 +37,7 @@ public class User {
   	@Column(name = "login_ip" )
 	private String loginIp;
   	@Column(name = "create_time" )
-	private java.sql.Timestamp createTime;
+	private Date createTime;
   	@Column(name = "update_time" )
-	private java.sql.Timestamp updateTime;
+	private Date updateTime;
 }

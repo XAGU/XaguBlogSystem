@@ -6,6 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.util.Date;
 
 /**
  * @author xagu
@@ -13,16 +14,16 @@ import javax.persistence.Table;
 @Data
 @Entity
 @Table ( name =" tb_settings" )
-public class Settings {
+public class Setting {
 
   	@Id
 	private String id;
-  	@Column(name = "key" )
+  	@Column(name = "`key`" )
 	private String key;
-  	@Column(name = "value" )
+  	@Column(name = "`value`" )
 	private String value;
   	@Column(name = "create_time" )
-	private java.sql.Timestamp createTime;
+	private Date createTime;
   	@Column(name = "update_time" )
-	private java.sql.Timestamp updateTime;
+	private Date updateTime;
 }

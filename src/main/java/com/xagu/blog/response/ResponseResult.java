@@ -12,6 +12,9 @@ public class ResponseResult {
     private String message;
     private Object data;
 
+    public static ResponseResult state(ResponseState responseState) {
+        return new ResponseResult(responseState);
+    }
 
     public static ResponseResult SUCCESS() {
         return new ResponseResult(ResponseState.SUCCESS);
