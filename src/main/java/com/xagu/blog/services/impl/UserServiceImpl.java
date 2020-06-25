@@ -28,7 +28,6 @@ import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
 import java.util.Random;
@@ -436,7 +435,7 @@ public class UserServiceImpl implements IUserService {
         }
         //判断用户id是否一致
         if (!userAccountFromKey.getId().equals(userId)) {
-            return ResponseResult.state(ResponseState.ASSESS_FORBID);
+            return ResponseResult.state(ResponseState.ASSESS_DENIED);
         }
         User userAccount = userDao.findOneById(userId);
         //允许用户修改的内容
@@ -467,15 +466,6 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public ResponseResult deleteByUserId(String userId) {
-        User userAccountFromKey = checkUser();
-        if (userAccountFromKey == null) {
-            return ResponseResult.state(ResponseState.ACCOUNT_NO_LOGIN);
-        }
-        //判断权限
-        if (!Constants.User.ROLE_ADMIN.equals(userAccountFromKey.getRoles())) {
-            return ResponseResult.state(ResponseState.ASSESS_FORBID);
-        }
-        //有权限
         User dbUser = userDao.findOneById(userId);
         if (dbUser == null) {
             return ResponseResult.FAILED("用户不存在，无法删除！");
@@ -486,15 +476,6 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public ResponseResult listUsers(Integer page, Integer size) {
-        User userAccountFromKey = checkUser();
-        if (userAccountFromKey == null) {
-            return ResponseResult.state(ResponseState.ACCOUNT_NO_LOGIN);
-        }
-        //判断权限
-        if (!Constants.User.ROLE_ADMIN.equals(userAccountFromKey.getRoles())) {
-            return ResponseResult.state(ResponseState.ASSESS_FORBID);
-        }
-        //有权限
         //分页查询
         if (page < Constants.Page.DEFAULT_PAGE) {
             page = Constants.Page.DEFAULT_PAGE;

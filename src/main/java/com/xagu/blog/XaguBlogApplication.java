@@ -19,6 +19,7 @@ import java.util.Random;
  */
 @EnableAsync
 @EnableSwagger2
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 @SpringBootApplication
 public class XaguBlogApplication {
     public static void main(String[] args) {
