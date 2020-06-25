@@ -16,6 +16,14 @@ public class ResponseResult {
         return new ResponseResult(responseState);
     }
 
+    public static ResponseResult decide(boolean isSuccess, String successMsg, String failMessage) {
+        if (isSuccess) {
+            return ResponseResult.SUCCESS(successMsg);
+        } else {
+            return ResponseResult.FAILED(failMessage);
+        }
+    }
+
     public static ResponseResult SUCCESS() {
         return new ResponseResult(ResponseState.SUCCESS);
     }

@@ -3,13 +3,16 @@ package com.xagu.blog.controller;
 import com.wf.captcha.SpecCaptcha;
 import com.wf.captcha.base.Captcha;
 import com.xagu.blog.response.ResponseResult;
+import com.xagu.blog.services.IUserService;
 import com.xagu.blog.utils.Constants;
+import com.xagu.blog.utils.CookieUtil;
 import com.xagu.blog.utils.RedisUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -38,6 +41,9 @@ public class TestController {
     @Autowired
     RedisUtil redisUtil;
 
+    @Autowired
+    IUserService userService;
+
     @RequestMapping("/captcha")
     public void captcha(HttpServletResponse response) throws Exception {
         // 设置请求头为输出图片类型
@@ -61,4 +67,11 @@ public class TestController {
         // 输出图片流
         specCaptcha.out(response.getOutputStream());
     }
+
+
+    @PostMapping("/mySelf")
+    public ResponseResult testComment(HttpServletRequest request, HttpServletResponse response) {
+        return ResponseResult.SUCCESS().setData(userService.checkUser());
+    }
+
 }

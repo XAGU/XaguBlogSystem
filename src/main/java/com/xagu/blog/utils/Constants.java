@@ -1,5 +1,7 @@
 package com.xagu.blog.utils;
 
+import javax.validation.constraints.Min;
+
 /**
  * @author xagu
  * Created on 2020/6/23
@@ -8,8 +10,6 @@ package com.xagu.blog.utils;
  */
 public interface Constants {
 
-    Integer DEFAULT_SIZE = 30;
-    Integer DEFAULT_PAGE = 1;
 
     interface User {
         String ROLE_ADMIN = "role_admin";
@@ -27,9 +27,28 @@ public interface Constants {
         String KEY_EMAIL_SEND_ADDRESS = "key_email_send_address_";
         String KEY_EMAIL_CODE_CONTENT = "key_email_code_content_";
         Integer KEY_EMAIL_SEND_ADDRESS_LIMIT = 30;
+        String KEY_JWT_TOKEN = "key_jwt_token_";
+        String XAGU_BLOG_TOKEN = "xagu_blog_token";
     }
+
 
     interface Settings {
         String MANAGER_ACCOUNT_INIT_STATE = "manager_account_init_state";
+    }
+
+    interface Page {
+        Integer DEFAULT_PAGE = 1;
+        Integer MIN_SIZE = 5;
+    }
+
+    interface TimeValue {
+        Integer MIN = 60;
+        Integer MIN_10 = MIN * 10;
+        Integer HOUR = 60 * MIN;
+        Integer DAY = 24 * HOUR;
+        Integer WEEK = 7 * DAY;
+        Integer MONTH = 30 * DAY;
+        Integer YEAR = 365 * DAY;
+        Integer HOUR_2 = HOUR * 2;
     }
 }

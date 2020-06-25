@@ -3,9 +3,6 @@ package com.xagu.blog.services;
 import com.xagu.blog.pojo.User;
 import com.xagu.blog.response.ResponseResult;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 /**
  * @author xagu
  * Created on 2020/6/22
@@ -17,28 +14,25 @@ public interface IUserService {
      * 初始化管理员
      *
      * @param user
-     * @param request
      * @return
      */
-    ResponseResult initManagerAccount(User user, HttpServletRequest request);
+    ResponseResult initManagerAccount(User user);
 
     /**
      * 获取验证码
      *
-     * @param response
      * @param captchaKey
      * @throws Exception
      */
-    void createCaptcha(HttpServletResponse response, String captchaKey) throws Exception;
+    void createCaptcha(String captchaKey) throws Exception;
 
     /**
      * 发送邮件
      *
-     * @param request
      * @param email
      * @return
      */
-    ResponseResult sendEmail(HttpServletRequest request, String type, String email);
+    ResponseResult sendEmail(String type, String email);
 
     /**
      * 注册
@@ -47,8 +41,66 @@ public interface IUserService {
      * @param emailCode
      * @param captchaCode
      * @param captchaKey
-     * @param request
      * @return
      */
-    ResponseResult register(User user, String emailCode, String captchaCode, String captchaKey, HttpServletRequest request);
+    ResponseResult register(User user, String emailCode, String captchaCode, String captchaKey);
+
+    /**
+     * 登录
+     * @param captchaKey
+     * @param captcha
+     * @param user
+     * @return
+     */
+    ResponseResult doLogin(String captchaKey, String captcha, User user);
+
+    /**
+     * 检查当前用户
+     * @return
+     */
+    User checkUser();
+
+    /**
+     * 根据id查询用户信息
+     * @param userId
+     * @return
+     */
+    ResponseResult getUserInfoById(String userId);
+
+    /**
+     * 检查邮箱
+     * @param email
+     * @return
+     */
+    ResponseResult checkEmail(String email);
+
+    /**
+     * 检查用户名
+     * @param userName
+     * @return
+     */
+    ResponseResult checkUserName(String userName);
+
+    /**
+     * 修改用户信息
+     * @param userId
+     * @param user
+     * @return
+     */
+    ResponseResult updateUserInfo(String userId, User user);
+
+    /**
+     * 删除账户通过id,不是真的删除，修改状态而已
+     * @param userId
+     * @return
+     */
+    ResponseResult deleteByUserId(String userId);
+
+    /**
+     * 分页查询user
+     * @param page
+     * @param size
+     * @return
+     */
+    ResponseResult listUsers(Integer page, Integer size);
 }

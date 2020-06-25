@@ -28,10 +28,21 @@ public enum ResponseState {
      */
     GET_RES_FAILED(false, 40001, "获取资源失败"),
     /**
+     * 未登录
+     */
+    ACCOUNT_NO_LOGIN(false, 400002, "账号未登录"),
+    /**
+     * 未登录
+     */
+    ASSESS_FORBID(false, 400003, "无权限访问"),
+    /**
+     * 用户已冻结
+     */
+    ACCOUNT_DENIED(false, 400004, "用户已冻结！"),
+    /**
      * 登录失败
      */
     LOGIN_FAILED(false, 49999, "登录失败");
-
 
     /**
      * 是否成功
