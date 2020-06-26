@@ -295,11 +295,11 @@ public class UserServiceImpl implements IUserService {
         }
         captcha = captcha.toLowerCase();
         String realCaptcha = (String) redisUtil.get(Constants.User.KEY_CAPTCHA_CONTENT + captchaKey);
-        //取了之后就干掉
-        redisUtil.del(Constants.User.KEY_CAPTCHA_CONTENT + captchaKey);
         if (realCaptcha == null || !realCaptcha.equals(captcha)) {
             return ResponseResult.FAILED("验证码错误！");
         }
+        //验证码正确就干掉redis
+        redisUtil.del(Constants.User.KEY_CAPTCHA_CONTENT + captchaKey);
         //通过用户名查找用户
         String userName = user.getUserName();
         if (StringUtils.isEmpty(userName)) {
@@ -346,11 +346,11 @@ public class UserServiceImpl implements IUserService {
         //token的md5作为key
         String md5Token = DigestUtils.md5DigestAsHex(token.getBytes());
         //保存到redis
-        redisUtil.set(Constants.User.KEY_JWT_TOKEN + md5Token, token, Constants.TimeValue.HOUR_2);
+        redisUtil.set(Constants.User.KEY_JWT_TOKEN + md5Token, token, Constants.TimeValueInSecond.HOUR_2);
         //保存到cookie
         CookieUtil.setUpCookie(response, Constants.User.XAGU_BLOG_TOKEN, md5Token);
         //生成refreshToken
-        String refreshToken = JwtUtil.createRefreshToken(dbUser.getId(), Constants.TimeValue.MONTH);
+        String refreshToken = JwtUtil.createRefreshToken(dbUser.getId(), Constants.TimeValueInMillion.MONTH);
         //保存在数据库
         RefreshToken refreshTokenBean = new RefreshToken();
         refreshTokenBean.setId(String.valueOf(snowFlake.nextId()));
@@ -488,6 +488,74 @@ public class UserServiceImpl implements IUserService {
         Sort sort = Sort.by(Sort.Direction.DESC, "createTime");
         Pageable pageable = PageRequest.of(page - 1, size, sort);
         return ResponseResult.SUCCESS("获取用户列表成功！").setData(userDao.listAllUserNoPassword(pageable));
+    }
+
+    @Override
+    public ResponseResult updateUserPassword(String verifyCode, User user) {
+        //检查邮箱
+        String email = user.getEmail();
+        if (StringUtils.isEmpty(email)) {
+            return ResponseResult.FAILED("邮箱不能为空！");
+        }
+        //检查密码
+        String password = user.getPassword();
+        if (StringUtils.isEmpty(password)) {
+            return ResponseResult.FAILED("密码不能为空！");
+        }
+        //根据邮箱去redis拿验证码
+        String emailCode = (String) redisUtil.get(Constants.User.KEY_EMAIL_CODE_CONTENT + email);
+        //拿到了验证码开始对比
+        if (StringUtils.isEmpty(emailCode) || !emailCode.equals(verifyCode)) {
+            return ResponseResult.FAILED("邮箱验证码错误！");
+        }
+        //删除掉验证码
+        redisUtil.del(Constants.User.KEY_EMAIL_CODE_CONTENT + email);
+        //验证码正确，开始修改密码
+        Integer result = userDao.updatePasswordByEmail(bCryptPasswordEncoder.encode(password), email);
+        return ResponseResult.decide(result > 0,
+                "修改用户密码成功！",
+                "修改用户密码失败！");
+    }
+
+    @Override
+    public ResponseResult updateUserEmail(String email, String verifyCode) {
+        //检查用户是否登录
+        User currentUser = this.checkUser();
+        if (currentUser == null) {
+            return ResponseResult.state(ResponseState.ACCOUNT_NO_LOGIN);
+        }
+        //判断邮箱正确性
+        if (StringUtils.isEmpty(email)) {
+            return ResponseResult.FAILED("邮箱不能为空！");
+        }
+        //判断验证码
+        String emailCode = (String) redisUtil.get(Constants.User.KEY_EMAIL_CODE_CONTENT + email);
+        if (StringUtils.isEmpty(verifyCode) || !verifyCode.equals(emailCode)) {
+            return ResponseResult.FAILED("邮箱验证码错误！");
+        }
+        //删除掉验证码
+        redisUtil.del(Constants.User.KEY_EMAIL_CODE_CONTENT + email);
+        //验证通过修改邮箱
+        Integer result = userDao.updateEmailById(email, currentUser.getId());
+        return ResponseResult.decide(result > 0,
+                "修改用户邮箱成功！",
+                "修改用户邮箱失败！");
+    }
+
+    @Override
+    public ResponseResult doLogout() {
+        //cookie里拿tokenkey
+        String tokenKey = CookieUtil.getCookie(request, Constants.User.XAGU_BLOG_TOKEN);
+        if (StringUtils.isEmpty(tokenKey)) {
+            return ResponseResult.state(ResponseState.ACCOUNT_NO_LOGIN);
+        }
+        //删除mysql的refreshToken
+        refreshTokenDao.deleteByTokenKey(tokenKey);
+        //删除redis里的token
+        redisUtil.del(Constants.User.KEY_JWT_TOKEN + tokenKey);
+        //删除cookie的tokenKey
+        CookieUtil.deleteCookie(response, Constants.User.XAGU_BLOG_TOKEN);
+        return ResponseResult.SUCCESS("退出登录成功！");
     }
 
     private User parseToUserByTokenKey(String tokenKey) {

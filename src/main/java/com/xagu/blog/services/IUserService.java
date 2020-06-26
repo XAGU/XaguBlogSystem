@@ -103,4 +103,26 @@ public interface IUserService {
      * @return
      */
     ResponseResult listUsers(Integer page, Integer size);
+
+    /**
+     * 更新密码
+     * @param verifyCode
+     * @param user
+     * @return
+     */
+    ResponseResult updateUserPassword(String verifyCode, User user);
+
+    /**
+     * 修改邮箱
+     * @param email
+     * @param verifyCode
+     * @return
+     */
+    ResponseResult updateUserEmail(String email, String verifyCode);
+
+    /**
+     * 退出登录
+     * @return
+     */
+    ResponseResult doLogout();
 }

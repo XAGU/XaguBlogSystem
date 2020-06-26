@@ -2,6 +2,9 @@ package com.xagu.blog.controller.admin;
 
 import com.xagu.blog.pojo.Category;
 import com.xagu.blog.response.ResponseResult;
+import com.xagu.blog.services.ICategoryService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -14,14 +17,19 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("admin/category")
 public class CategoryAdminApi {
 
+    @Autowired
+    ICategoryService categoryService;
+
     /**
      * 添加分类
+     * 需要管理员权限
      *
      * @return
      */
+    @PreAuthorize("@permission.admin()")
     @PostMapping
     public ResponseResult addCategory(@RequestBody Category category) {
-        return null;
+        return categoryService.addCategory(category);
     }
 
     /**
@@ -31,7 +39,7 @@ public class CategoryAdminApi {
      */
     @DeleteMapping("{categoryId}")
     public ResponseResult deleteCategory(@PathVariable("categoryId") String categoryId) {
-        return null;
+        return categoryService.deleteCategory(categoryId);
     }
 
     /**
@@ -39,30 +47,38 @@ public class CategoryAdminApi {
      *
      * @return
      */
-    @PostMapping("{categoryId}")
-    public ResponseResult updateCategory(@PathVariable("{categoryId}") String categoryId, @RequestBody Category category) {
-        return null;
+    @PreAuthorize("@permission.admin()")
+    @PutMapping("{categoryId}")
+    public ResponseResult updateCategory(@PathVariable("categoryId") String categoryId, @RequestBody Category category) {
+        return categoryService.updateCategory(categoryId, category);
     }
 
 
     /**
      * 根据Id查询分类
+     * 使用的case
+     * 修改的时候，获取一下，填充弹窗
+     * <p>
+     * 管理员权限
      *
      * @return
      */
+    @PreAuthorize("@permission.admin()")
     @GetMapping("{categoryId}")
-    public ResponseResult addCategory(@PathVariable("categoryId") String categoryId, @RequestBody Category category) {
-        return null;
+    public ResponseResult getCategory(@PathVariable("categoryId") String categoryId) {
+        return categoryService.getCategory(categoryId);
     }
 
     /**
      * 查询所有分类
+     * 管理员权限
      *
      * @return
      */
-    @GetMapping("list")
-    public ResponseResult listCategory(@RequestParam("page") Integer page, @RequestParam("size") Integer size) {
-        return null;
+    @PreAuthorize("@permission.admin()")
+    @GetMapping("list/{page}/{size}")
+    public ResponseResult listCategory(@PathVariable("page") Integer page, @PathVariable("size") Integer size) {
+        return categoryService.listCategory(page, size);
     }
 
 

@@ -15,4 +15,6 @@ public interface RefreshTokenDao extends JpaRepository<RefreshToken, String>, Jp
     RefreshToken findOneByTokenKey(String tokenKey);
 
     Integer deleteByUserId(String userId);
+
+    Integer deleteByTokenKey(String tokenKey);
 }

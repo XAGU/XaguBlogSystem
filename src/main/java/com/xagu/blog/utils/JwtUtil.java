@@ -23,7 +23,7 @@ public class JwtUtil {
     /**
      * 2个小时
      */
-    private static long ttl = Constants.TimeValue.HOUR_2 * 1000;
+    private static long ttl = Constants.TimeValueInMillion.HOUR_2;
 
     public String getKey() {
         return key;

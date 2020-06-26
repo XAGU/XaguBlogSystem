@@ -1,0 +1,46 @@
+server:
+  port: 8888
+spring:
+  application:
+    name: xagu-system-blog
+  datasource:
+    url: jdbc:mysql://192.168.189.140:3306/sob_blog_system?characterEncoding=utf-8&useSSL=false
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    show-sql: true
+  mail:
+    host: outlook.office365.com
+    username: xagu_blog@outlook.com
+    password: xagu6666
+    protocol: smtp
+    default-encoding: UTF-8
+    properties:
+      mail:
+        smtp:
+          auth: true #授权
+          starttls:
+            enable: true
+            required: true
+  redis:
+    host: 192.168.189.140
+    port: 6379
+    password:
+  task:
+    scheduling:
+      thread-name-prefix: xagu_blog_task_worker-
+    execution:
+      pool:
+        queue-capacity: 30
+        max-size: 10
+        core-size: 2
+logging:
+  level:
+    root: info
+    com.xagu.blog: debug
+xagu:
+  blog:
+    upload:
+      image:
+        savePath: E:\upload

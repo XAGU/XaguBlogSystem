@@ -41,7 +41,18 @@ public interface Constants {
         Integer MIN_SIZE = 5;
     }
 
-    interface TimeValue {
+    interface TimeValueInMillion {
+        Integer MIN = 60 * 1000;
+        Integer MIN_10 = MIN * 10 * 1000;
+        Integer HOUR = 60 * MIN * 1000;
+        Integer DAY = 24 * HOUR * 1000;
+        Integer WEEK = 7 * DAY * 1000;
+        Integer MONTH = 30 * DAY * 1000;
+        Integer YEAR = 365 * DAY * 1000;
+        Integer HOUR_2 = HOUR * 2 * 1000;
+    }
+
+    interface TimeValueInSecond {
         Integer MIN = 60;
         Integer MIN_10 = MIN * 10;
         Integer HOUR = 60 * MIN;

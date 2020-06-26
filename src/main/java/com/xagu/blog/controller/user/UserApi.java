@@ -45,7 +45,7 @@ public class UserApi {
      *
      * @return
      */
-    @PostMapping
+    @PostMapping("register")
     public ResponseResult register(@RequestBody User user,
                                    @RequestParam("email_code") String emailCode,
                                    @RequestParam("captcha_code") String captchaCode,
@@ -66,7 +66,7 @@ public class UserApi {
      * @param captchaKey
      * @return
      */
-    @PostMapping("{captcha_key}/{captcha}")
+    @PostMapping("login/{captcha_key}/{captcha}")
     public ResponseResult login(@PathVariable("captcha_key") String captchaKey, @PathVariable("captcha") String captcha, @RequestBody User user) {
         return userService.doLogin(captchaKey, captcha, user);
     }
@@ -96,13 +96,58 @@ public class UserApi {
     }
 
     /**
-     * 更新密码
+     * 修改密码Password
+     * 修改密码
+     * 普通做法：通过旧密码对比来更新密码
+     * <p>
+     * 找回密码/修改密码
+     * 发送验证码到邮箱---》判断验证码是否正确来判断
+     * 对应邮箱/手机所注册的号码是否属于你
+     * <p>
+     * 步骤
+     * 1、用户填写邮箱
+     * 2、用户获取验证码type=forget
+     * 3、填写新的密码
+     * 4、提交数据
+     * <p>
+     * 数据包括
+     * <p>
+     * 1、邮箱和新密码
+     * 2、验证码
+     * <p>
+     * 如果验证码正确---》可以修改密码
      *
      * @return
      */
-    @PutMapping("password/{userId}")
-    public ResponseResult updatePassword(@PathVariable("userId") String userId, @RequestBody User user) {
-        return null;
+    @PutMapping("password/{verify_code}")
+    public ResponseResult updatePassword(@PathVariable("verify_code") String verifyCode, @RequestBody User user) {
+        return userService.updateUserPassword(verifyCode, user);
+    }
+
+    /**
+     * 1、必须已经登录
+     * 2、新的邮箱可用
+     * <p>
+     * 步骤
+     * 1、用户填写新邮箱
+     * 2、用户获取验证码type=update
+     * 3、输入验证码
+     * 4、提交数据
+     * <p>
+     * 数据包括
+     * <p>
+     * 1、新的邮箱地址
+     * 2、验证码
+     * 其他的数据从token拿
+     *
+     * <p>
+     * 如果验证码正确---》可以修改
+     *
+     * @return
+     */
+    @PutMapping("email")
+    public ResponseResult updateEmail(@RequestParam("email") String email, @RequestParam("verify_code") String verifyCode) {
+        return userService.updateUserEmail(email, verifyCode);
     }
 
     /**
@@ -110,7 +155,7 @@ public class UserApi {
      *
      * @return
      */
-    @GetMapping("/{userId}")
+    @GetMapping("user_info/{userId}")
     public ResponseResult getUserInfo(@PathVariable("userId") String userId) {
         return userService.getUserInfoById(userId);
     }
@@ -126,7 +171,7 @@ public class UserApi {
      *
      * @return
      */
-    @PutMapping("/{userId}")
+    @PutMapping("user_info/{userId}")
     public ResponseResult updateUserInfo(@PathVariable("userId") String userId, @RequestBody User user) {
         return userService.updateUserInfo(userId, user);
     }
@@ -181,6 +226,20 @@ public class UserApi {
     @GetMapping("username_status")
     public ResponseResult checkUserName(@RequestParam("userName") String userName) {
         return userService.checkUserName(userName);
+    }
+
+    /**
+     * 退出登录
+     * 拿到tokenKey
+     * 删除redis中的token
+     * 删除mysql里的refreshToken
+     * 删除cookie的tokenKey
+     *
+     * @return
+     */
+    @GetMapping("logout")
+    public ResponseResult logout() {
+        return userService.doLogout();
     }
 
 }

@@ -1,8 +1,10 @@
 package com.xagu.blog.controller.admin;
 
-import com.xagu.blog.pojo.Image;
 import com.xagu.blog.response.ResponseResult;
+import com.xagu.blog.services.IImageService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * @author xagu
@@ -12,14 +14,18 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("admin/image")
-public class ImageApi {
+public class ImageAdminApi {
+
+
+    @Autowired
+    IImageService imageService;
 
     /**
      * 上传图片
      */
     @PostMapping
-    public ResponseResult uploadImage() {
-        return null;
+    public ResponseResult uploadImage(MultipartFile file) {
+        return imageService.uploadImage(file);
     }
 
     /**
@@ -30,20 +36,13 @@ public class ImageApi {
         return null;
     }
 
-    /**
-     * 修改图片
-     */
-    @PutMapping("{imageId}")
-    public ResponseResult updateImage(@PathVariable("imageId") String imageId, @RequestBody Image image) {
-        return null;
-    }
 
     /**
      * 根据id查询图片
      */
     @GetMapping("{imageId}")
-    public ResponseResult getImage(@PathVariable("imageId") String imageId) {
-        return null;
+    public void getImage(@PathVariable("imageId") String imageId) {
+        imageService.getImage(imageId);
     }
 
     /**
