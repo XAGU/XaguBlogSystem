@@ -3,6 +3,7 @@ package com.xagu.blog.controller.admin;
 import com.xagu.blog.response.ResponseResult;
 import com.xagu.blog.services.IImageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -23,6 +24,7 @@ public class ImageAdminApi {
     /**
      * 上传图片
      */
+    @PreAuthorize("@permission.admin()")
     @PostMapping
     public ResponseResult uploadImage(MultipartFile file) {
         return imageService.uploadImage(file);
@@ -31,25 +33,28 @@ public class ImageAdminApi {
     /**
      * 删除图片
      */
+    @PreAuthorize("@permission.admin()")
     @DeleteMapping("{imageId}")
     public ResponseResult deleteImage(@PathVariable("imageId") String imageId) {
-        return null;
+        return imageService.deleteImage(imageId);
     }
 
 
     /**
      * 根据id查询图片
      */
+    @PreAuthorize("@permission.admin()")
     @GetMapping("{imageId}")
-    public void getImage(@PathVariable("imageId") String imageId) {
-        imageService.getImage(imageId);
+    public ResponseResult getImage(@PathVariable("imageId") String imageId) {
+        return imageService.getImage(imageId);
     }
 
     /**
      * 查询所有图片
      */
-    @GetMapping("list")
-    public ResponseResult listImage(@RequestParam("page") Integer page, @RequestParam("size") Integer size) {
-        return null;
+    @PreAuthorize("@permission.admin()")
+    @GetMapping("list/{page}/{size}")
+    public ResponseResult listImage(@PathVariable("page") Integer page, @PathVariable("size") Integer size) {
+        return imageService.listImage(page, size);
     }
 }

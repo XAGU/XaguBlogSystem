@@ -41,7 +41,7 @@ import java.util.Random;
 @Slf4j
 @Service
 @Transactional(rollbackFor = RuntimeException.class)
-public class UserServiceImpl implements IUserService {
+public class UserServiceImpl extends BaseService implements IUserService {
 
     @Autowired
     HttpServletRequest request;
@@ -476,14 +476,8 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public ResponseResult listUsers(Integer page, Integer size) {
-        //分页查询
-        if (page < Constants.Page.DEFAULT_PAGE) {
-            page = Constants.Page.DEFAULT_PAGE;
-        }
-        //最少查5个
-        if (size < Constants.Page.MIN_SIZE) {
-            size = Constants.Page.MIN_SIZE;
-        }
+        page = this.checkPage(page);
+        size = this.checkSize(size);
         //根据日期来排序
         Sort sort = Sort.by(Sort.Direction.DESC, "createTime");
         Pageable pageable = PageRequest.of(page - 1, size, sort);

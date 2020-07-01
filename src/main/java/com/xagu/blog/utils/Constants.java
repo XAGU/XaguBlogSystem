@@ -34,6 +34,10 @@ public interface Constants {
 
     interface Settings {
         String MANAGER_ACCOUNT_INIT_STATE = "manager_account_init_state";
+        String WEB_SITE_TITLE = "web_site_title";
+        String WEB_SITE_DESCRIPTION = "web_site_description";
+        String WEB_SITE_KEYWORDS = "web_site_keywords";
+        String WEB_SITE_VIEW_COUNT = "web_site_view_count";
     }
 
     interface Page {
@@ -61,5 +65,30 @@ public interface Constants {
         Integer MONTH = 30 * DAY;
         Integer YEAR = 365 * DAY;
         Integer HOUR_2 = HOUR * 2;
+    }
+
+    interface ImageType {
+        String PREFIX = "image/";
+        String TYPE_JPG = "jpg";
+        String TYPE_PNG = "png";
+        String TYPE_GIF = "gif";
+        String TYPE_JPEG = "jpeg";
+        String TYPE_JPG_WITH_PREFIX = PREFIX + "jpg";
+        String TYPE_PNG_WITH_PREFIX = PREFIX + "png";
+        String TYPE_GIF_WITH_PREFIX = PREFIX + "gif";
+        String TYPE_JPEG_WITH_PREFIX = PREFIX + "jpeg";
+    }
+
+    interface Article {
+        int TITLE_MAX_LENGTH = 128;
+        int SUMMARY_MAX_LENGTH = 256;
+        //删除
+        String STATE_DELETE = "0";
+        //发布
+        String STATE_PUBLISH = "1";
+        //草稿
+        String STATE_DRAFT = "2";
+        //置顶
+        String STATE_TOP = "3";
     }
 }

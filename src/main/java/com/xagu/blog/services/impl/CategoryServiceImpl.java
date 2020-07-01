@@ -26,7 +26,7 @@ import java.util.Date;
 @Slf4j
 @Service
 @Transactional(rollbackFor = RuntimeException.class)
-public class CategoryServiceImpl implements ICategoryService {
+public class CategoryServiceImpl extends BaseService implements ICategoryService {
 
     @Autowired
     private SnowFlake snowFlake;
@@ -67,14 +67,8 @@ public class CategoryServiceImpl implements ICategoryService {
 
     @Override
     public ResponseResult listCategory(Integer page, Integer size) {
-        //分页查询
-        if (page < Constants.Page.DEFAULT_PAGE) {
-            page = Constants.Page.DEFAULT_PAGE;
-        }
-        //最少查5个
-        if (size < Constants.Page.MIN_SIZE) {
-            size = Constants.Page.MIN_SIZE;
-        }
+        page = this.checkPage(page);
+        size = this.checkSize(size);
         Sort sort = Sort.by(Sort.Direction.DESC, "createTime", "order");
         Pageable pageable = PageRequest.of(page - 1, size, sort);
         return ResponseResult.SUCCESS("获取分类列表成功！")
@@ -102,9 +96,8 @@ public class CategoryServiceImpl implements ICategoryService {
             dbCategory.setPinyin(categoryPinyin);
         }
         Long categoryOrder = category.getOrder();
-        if (categoryOrder != null) {
-            dbCategory.setOrder(categoryOrder);
-        }
+        dbCategory.setOrder(categoryOrder);
+
         dbCategory.setUpdateTime(new Date());
         //保存数据
         categoryDao.save(dbCategory);

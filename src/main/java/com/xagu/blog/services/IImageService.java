@@ -22,5 +22,20 @@ public interface IImageService {
      * @param imageId
      * @return
      */
-    void getImage(String imageId);
+    ResponseResult getImage(String imageId);
+
+    /**
+     * 分页查询图片
+     * @param page
+     * @param size
+     * @return
+     */
+    ResponseResult listImage(Integer page, Integer size);
+
+    /**
+     * 根据图片id删除图片
+     * @param imageId
+     * @return
+     */
+    ResponseResult deleteImage(String imageId);
 }

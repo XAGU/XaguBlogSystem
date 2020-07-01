@@ -44,3 +44,4 @@ xagu:
     upload:
       image:
         savePath: E:\upload
+        maxSize: 2097152

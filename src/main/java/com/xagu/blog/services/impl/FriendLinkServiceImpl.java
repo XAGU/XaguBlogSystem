@@ -25,7 +25,7 @@ import java.util.Date;
  */
 @Service
 @Transactional(rollbackFor = RuntimeException.class)
-public class FriendLinkServiceImpl implements IFriendLinkService {
+public class FriendLinkServiceImpl extends BaseService implements IFriendLinkService {
 
     @Autowired
     private SnowFlake snowFlake;
@@ -68,14 +68,8 @@ public class FriendLinkServiceImpl implements IFriendLinkService {
 
     @Override
     public ResponseResult listFriendLink(Integer page, Integer size) {
-        //分页查询
-        if (page < Constants.Page.DEFAULT_PAGE) {
-            page = Constants.Page.DEFAULT_PAGE;
-        }
-        //最少查5个
-        if (size < Constants.Page.MIN_SIZE) {
-            size = Constants.Page.MIN_SIZE;
-        }
+        page = this.checkPage(page);
+        size = this.checkSize(size);
         Sort sort = Sort.by(Sort.Direction.DESC, "order", "createTime");
         Pageable pageable = PageRequest.of(page - 1, size, sort);
         Page<FriendLink> friendLinks = friendLinkDao.findAll(pageable);
@@ -111,9 +105,7 @@ public class FriendLinkServiceImpl implements IFriendLinkService {
             dbFriendLink.setUrl(friendLinkUrl);
         }
         Long friendLinkOrder = friendLink.getOrder();
-        if (friendLinkOrder != null) {
-            dbFriendLink.setOrder(friendLinkOrder);
-        }
+        dbFriendLink.setOrder(friendLinkOrder);
         dbFriendLink.setUpdateTime(new Date());
         //保存数据
         friendLinkDao.save(dbFriendLink);

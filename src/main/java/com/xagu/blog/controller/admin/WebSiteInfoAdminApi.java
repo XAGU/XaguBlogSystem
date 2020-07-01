@@ -1,6 +1,9 @@
 package com.xagu.blog.controller.admin;
 
 import com.xagu.blog.response.ResponseResult;
+import com.xagu.blog.services.IWebSiteInfoService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -13,14 +16,18 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("admin/web_site_info")
 public class WebSiteInfoAdminApi {
 
+    @Autowired
+    private IWebSiteInfoService webSiteInfoService;
+
     /**
      * 获取网址标题
      *
      * @return
      */
+    @PreAuthorize("@permission.admin()")
     @GetMapping("title")
-    public ResponseResult getWebSiteInfo() {
-        return null;
+    public ResponseResult getWebSiteTitle() {
+        return webSiteInfoService.getWebSiteTitle();
     }
 
     /**
@@ -29,9 +36,10 @@ public class WebSiteInfoAdminApi {
      * @param title
      * @return
      */
+    @PreAuthorize("@permission.admin()")
     @PutMapping("title")
     public ResponseResult updateWebSiteInfo(@RequestParam("title") String title) {
-        return null;
+        return webSiteInfoService.updateWebSiteInfo(title);
     }
 
     /**
@@ -39,9 +47,10 @@ public class WebSiteInfoAdminApi {
      *
      * @return
      */
+    @PreAuthorize("@permission.admin()")
     @GetMapping("seo")
     public ResponseResult getSeoInfo() {
-        return null;
+        return webSiteInfoService.getSeoInfo();
     }
 
     /**
@@ -49,17 +58,20 @@ public class WebSiteInfoAdminApi {
      *
      * @return
      */
+    @PreAuthorize("@permission.admin()")
     @PutMapping("seo")
     public ResponseResult updateSeoInfo(@RequestParam("keywords") String keywords, @RequestParam("description") String description) {
-        return null;
+        return webSiteInfoService.updateSeoInfo(keywords, description);
     }
 
     /**
      * 获取网站统计信息
+     *
      * @return
      */
+    @PreAuthorize("@permission.admin()")
     @GetMapping("view_count")
-    public ResponseResult getWebSiteViewCount(){
-        return null;
+    public ResponseResult getWebSiteViewCount() {
+        return webSiteInfoService.getWebSiteViewCount();
     }
 }
